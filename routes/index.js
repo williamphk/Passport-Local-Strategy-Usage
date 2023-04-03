@@ -3,6 +3,8 @@ const passport = require('passport');
 const genPassword = require('../lib/passwordUtils').genPassword;
 const connection = require('../config/database');
 const User = connection.models.User;
+const isAuth = require('./authMiddleware').isAuth;
+const isAdmin = require('./authMiddleware').isAdmin;
 
 /**
  * -------------- POST ROUTES ----------------
@@ -70,11 +72,11 @@ router.get('/register', (req, res, next) => {
  * 
  * Also, look up what behaviour express session has without a maxage set
  */
-router.get('/protected-route', (req, res, next) => {
+router.get('/protected-route', isAuth, (req, res, next) => {
     res.send('You made it to the route.');
 });
 
-router.get('/admin-route', (req, res, next) => {
+router.get('/admin-route', isAdmin, (req, res, next) => {
     res.send('You made it to the admin route.');
 });
 
